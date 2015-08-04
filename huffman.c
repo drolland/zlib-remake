@@ -63,13 +63,13 @@ void huffman_weight_list_print(Huffman_Tree_Node* list){
     }
 }
 
-const int WIDTH = 1024 * 2 ;
-const int HEIGHT = 768 * 2 ;
-const float STEP = 50.0f;
+const int WIDTH = 1024 * 4 ;
+const int HEIGHT = 768 * 4 ;
+const float STEP = 50.0f ;
 
 void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
    
-    /*
+    
     cairo_save(cr);
     cairo_arc(cr,0,0,STEP / 1.414f,0,2*3.15);
     cairo_stroke (cr);
@@ -91,48 +91,52 @@ void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
     cairo_restore(cr);
     
 
+    char buffer[16];
+    sprintf(buffer,"%d",node->weight);
     cairo_set_font_size(cr,STEP / 2.0f);
-    cairo_text_extents (cr, "142", &te);
-    cairo_move_to (cr, STEP - te.x_bearing , - te.y_bearing - te.height / 2);
-    cairo_show_text (cr,"142");
+    cairo_text_extents (cr, buffer, &te);
+    cairo_move_to (cr, - te.x_bearing - te.width / 2, STEP * 1.5f - te.y_bearing - te.height / 2);
+    cairo_show_text (cr,buffer);
     cairo_stroke (cr);
     
-    
+    int translate_distance = ( WIDTH + 800 )/ ( pow(2,depth) + 1 ) / 2;
     
     if ( node->rhl != NULL ){
         cairo_save(cr);
-        cairo_translate(cr,STEP * 8 / depth , depth * STEP );
+        cairo_translate(cr, translate_distance ,  STEP * 4 );
         draw_tree_node_recursive(cr,node->rhl,depth+1);
         cairo_restore(cr);
     }
     
     if ( node->lhl != NULL ){
         cairo_save(cr);
-        cairo_translate(cr,-STEP * 8 / depth, depth * STEP );
+        cairo_translate(cr,- translate_distance,  STEP * 4);
         draw_tree_node_recursive(cr,node->lhl,depth+1);
         cairo_restore(cr);
     }
-*/
+
     
 }
 
 void huffman_tree_print(Huffman_Tree_Node* tree,int depth){
-    /*
+    
     cairo_surface_t* surface;
     cairo_t* cr;
     
-
-    
     surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,WIDTH,HEIGHT);
     cr = cairo_create (surface);
+    
+    cairo_set_source_rgb(cr,0,0,0);
+    cairo_rectangle(cr,0,0,WIDTH,HEIGHT);
+    cairo_fill(cr);
 
-    cairo_translate(cr,WIDTH/2,STEP*4);
+    cairo_translate(cr,WIDTH/2,STEP);
     cairo_set_line_width(cr,2);
-    cairo_set_source_rgb(cr,0.5f,0.7f,0);
+    cairo_set_source_rgb(cr,1,1,1);
     
     draw_tree_node_recursive(cr,tree,1);      
     
-    cairo_surface_write_to_png (surface,"tree.png");*/
+    cairo_surface_write_to_png (surface,"tree.png");
 }
 
 void huffman_build_weight_list(Huffman_Tree_Node** weight_list,char *str, int len) {

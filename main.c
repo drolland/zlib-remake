@@ -17,10 +17,9 @@
 int main(int argc, char** argv) {
 
     char *buffer = NULL;  
-    int buffer_size = file_read_into_buffer(&buffer,"test.txt");
+    int buffer_size = file_read_into_buffer(&buffer,"test2.txt");
     
-    printf("%s",buffer);
-    huffman_encode(buffer,buffer_size);
+    huffman_encode("abc",sizeof("abc"));
     printf("my_hash %x\n",my_hash(buffer,buffer_size));
     
     printf("a     %x\n",my_hash("a",1));

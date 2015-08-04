@@ -1,10 +1,10 @@
 aaahhhccccccddddddezg
 
 
-Prendre premier element dans la liste
-Premier element = élément courant
-Si poid element courant superieur : swap(current/to_insert)
-Si non, element courant = element_courant_suivant
+Prendre premier élément dans la liste
+Premier élément = élément courant
+Si pour eélément courant supérieur : swap(curent/to_insert)
+Si non, élément courant = élément_courant_suivant
 
 / Huffman_build_tree /
 
@@ -20,7 +20,7 @@ nouveau_noeud->rhl = 2st élement
 Dernier noeud = Nouveau noeud
 
 Tant que liste pas vide,
-	Current sym = premier element de la laiste
+	Curent sym = premier element de la liste
 	Retirer le premier element de la liste
 	Nouveau Noeud
 	nouveau_noeud_lhl = ancien noeud
@@ -42,3 +42,5 @@ Data
 -	Test compression, Test Decompression ( MD5sum ?)
 -	Test compression at different "block fixed size"
 -	Idea : Adaptative compression -> Guess best size for each block from build tree infp.
+
+

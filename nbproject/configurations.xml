@@ -49,7 +49,7 @@
           <standard>10</standard>
         </cTool>
         <linkerTool>
-          <commandLine>-lcairo</commandLine>
+          <commandLine>-lcairo -lm</commandLine>
         </linkerTool>
       </compileType>
       <item path="crc.c" ex="false" tool="0" flavor2="0">
