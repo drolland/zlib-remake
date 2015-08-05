@@ -20,7 +20,6 @@ typedef struct huffman_tree_node {
     struct huffman_tree_node* next;
     struct huffman_tree_node* rhl; /* Right leaf */
     struct huffman_tree_node* lhl; /* Left leaf */
-    unsigned int depth;
     unsigned int weight;
     char symbol;
 } Huffman_Tree_Node;
@@ -98,13 +97,13 @@ void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
     cairo_restore(cr);
     
 
-    char buffer[16];
+    /*char buffer[16];
     sprintf(buffer,"%d",node->depth);
     cairo_set_font_size(cr,STEP / 2.0f);
     cairo_text_extents (cr, buffer, &te);
     cairo_move_to (cr, - te.x_bearing - te.width / 2, STEP * 1.5f - te.y_bearing - te.height / 2);
     cairo_show_text (cr,buffer);
-    cairo_stroke (cr);
+    cairo_stroke (cr);*/
     
     int translate_distance = ( WIDTH + 800 )/ ( pow(2,depth) + 1 ) / 2;
     
@@ -169,7 +168,6 @@ void huffman_build_weight_list(Huffman_Tree_Node** weight_list,DList** alphabet_
         to_insert->next = NULL;
         to_insert->rhl = NULL;
         to_insert->lhl = NULL;
-        to_insert->depth = 0;
         to_insert->weight = weight_table[i];
         to_insert->symbol = i;
         huffman_weight_list_insert(&list,to_insert);
@@ -202,8 +200,6 @@ void huffman_build_tree(Huffman_Tree_Node** tree,DList** alphabet_list,Huffman_T
     new_node->lhl = list;
     new_node->rhl = list->next;
     new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
-    new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
-    new_node->depth++;
     
     if ( list->next->next == NULL){
         /* If only two symbol, tree has a single node with two leaf*/
@@ -226,8 +222,8 @@ void huffman_build_tree(Huffman_Tree_Node** tree,DList** alphabet_list,Huffman_T
         new_node->lhl = list;
         new_node->rhl = list->next;
         new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
-        new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
-        new_node->depth++;
+        /*new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
+        new_node->depth++;*/
         list = list->next->next; 
         dlist_append(alphabet_list,new_node);
                 
