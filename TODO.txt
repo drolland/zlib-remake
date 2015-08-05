@@ -1,0 +1,15 @@
+
+/* DETAILLED TODO */
+
+Huffman compressed file struct :
+INT32 : Nb char
+Huffman tree INT 32: Nb symbols
+Huffman tree : code / symbol
+Data 
+
+/* TODO */
+-	Test compression, Test Decompression ( MD5sum ?)
+-	Test compression at different "block fixed size"
+-	Idea : Adaptative compression -> Guess best size for each block from build tree infp.
+
+
