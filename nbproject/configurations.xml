@@ -7,6 +7,7 @@
       <itemPath>crc.h</itemPath>
       <itemPath>derror.h</itemPath>
       <itemPath>dfile.h</itemPath>
+      <itemPath>dlist.h</itemPath>
       <itemPath>dmemory.h</itemPath>
       <itemPath>huffman.h</itemPath>
     </logicalFolder>
@@ -20,6 +21,7 @@
       <itemPath>crc.c</itemPath>
       <itemPath>derror.c</itemPath>
       <itemPath>dfile.c</itemPath>
+      <itemPath>dlist.c</itemPath>
       <itemPath>dmemory.c</itemPath>
       <itemPath>huffman.c</itemPath>
       <itemPath>main.c</itemPath>
@@ -64,6 +66,10 @@
       </item>
       <item path="dfile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="dlist.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dlist.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="dmemory.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dmemory.h" ex="false" tool="3" flavor2="0">
@@ -106,6 +112,10 @@
       <item path="dfile.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dfile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dlist.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dlist.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dmemory.c" ex="false" tool="0" flavor2="0">
       </item>

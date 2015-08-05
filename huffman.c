@@ -6,6 +6,9 @@
 #include <math.h>
 #include "huffman.h"
 #include "dmemory.h"
+#include "dlist.h"
+
+#define MAX(a,b) a > b ? a : b
 
 enum {
     FALSE,
@@ -17,6 +20,7 @@ typedef struct huffman_tree_node {
     struct huffman_tree_node* next;
     struct huffman_tree_node* rhl; /* Right leaf */
     struct huffman_tree_node* lhl; /* Left leaf */
+    unsigned int depth;
     unsigned int weight;
     char symbol;
 } Huffman_Tree_Node;
@@ -34,22 +38,25 @@ void huffman_weight_list_insert(Huffman_Tree_Node** list, Huffman_Tree_Node* to_
         return;
     } 
     
-    if ( (*list)->weight > to_insert->weight){
+    if (  to_insert->weight < (*list)->weight   ){ 
         Huffman_Tree_Node* temp = *list;
         *list = to_insert;
         (*list)->next = temp;
+        return;
     }
         
     Huffman_Tree_Node* current = *list;
            
     while (current->next != NULL){
-            if ( current->next->weight > to_insert->weight ){
+            if ( to_insert->weight < current->next->weight ){
                 Huffman_Tree_Node* temp = current->next;
                 current->next = to_insert;
                 current->next->next = temp;
                 return;
             }
-            current = current->next;          
+            else {
+            current = current->next;  
+            }
         }      
     current->next = to_insert;
 }
@@ -92,7 +99,7 @@ void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
     
 
     char buffer[16];
-    sprintf(buffer,"%d",node->weight);
+    sprintf(buffer,"%d",node->depth);
     cairo_set_font_size(cr,STEP / 2.0f);
     cairo_text_extents (cr, buffer, &te);
     cairo_move_to (cr, - te.x_bearing - te.width / 2, STEP * 1.5f - te.y_bearing - te.height / 2);
@@ -139,7 +146,7 @@ void huffman_tree_print(Huffman_Tree_Node* tree,int depth){
     cairo_surface_write_to_png (surface,"tree.png");
 }
 
-void huffman_build_weight_list(Huffman_Tree_Node** weight_list,char *str, int len) {
+void huffman_build_weight_list(Huffman_Tree_Node** weight_list,DList** alphabet_list,char *str, int len) {
 
     unsigned int weight_table[256];
     memset(weight_table, 0, 256 * sizeof (unsigned int)); /* Zero weight table */
@@ -158,13 +165,15 @@ void huffman_build_weight_list(Huffman_Tree_Node** weight_list,char *str, int le
     Huffman_Tree_Node* list = NULL;
     Huffman_Tree_Node* to_insert = NULL;
     for (int i = 0; i < 256; i++) {
-        to_insert = (Huffman_Tree_Node*)checked_malloc(sizeof(Huffman_Tree_Node));                
-        to_insert->symbol = i;
-        to_insert->weight = weight_table[i];
+        to_insert = (Huffman_Tree_Node*)checked_malloc(sizeof(Huffman_Tree_Node));       
         to_insert->next = NULL;
         to_insert->rhl = NULL;
         to_insert->lhl = NULL;
+        to_insert->depth = 0;
+        to_insert->weight = weight_table[i];
+        to_insert->symbol = i;
         huffman_weight_list_insert(&list,to_insert);
+        dlist_append(alphabet_list,to_insert);
     }
 
     /* DEBUG : Display sorted weight list*/
@@ -175,7 +184,7 @@ void huffman_build_weight_list(Huffman_Tree_Node** weight_list,char *str, int le
 
 }
 
-void huffman_build_tree(Huffman_Tree_Node** tree,Huffman_Tree_Node* list){
+void huffman_build_tree(Huffman_Tree_Node** tree,DList** alphabet_list,Huffman_Tree_Node* list){
     
     assert(list != NULL);
            
@@ -193,6 +202,8 @@ void huffman_build_tree(Huffman_Tree_Node** tree,Huffman_Tree_Node* list){
     new_node->lhl = list;
     new_node->rhl = list->next;
     new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
+    new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
+    new_node->depth++;
     
     if ( list->next->next == NULL){
         /* If only two symbol, tree has a single node with two leaf*/
@@ -215,9 +226,11 @@ void huffman_build_tree(Huffman_Tree_Node** tree,Huffman_Tree_Node* list){
         new_node->lhl = list;
         new_node->rhl = list->next;
         new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
+        new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
+        new_node->depth++;
         list = list->next->next; 
-        huffman_weight_list_insert(&list,new_node);
-        
+        dlist_append(alphabet_list,new_node);
+                
     }
     
     *tree = list;
@@ -229,8 +242,9 @@ void huffman_encode(char* str, size_t len) {
     
     Huffman_Tree_Node* weight_list = NULL;
     Huffman_Tree_Node* tree = NULL;
-    huffman_build_weight_list(&weight_list,str, len);
-    huffman_build_tree(&tree,weight_list);
+    DList* alphabet_list = NULL;
+    huffman_build_weight_list(&weight_list,&alphabet_list,str,len);
+    huffman_build_tree(&tree,&alphabet_list,weight_list);
     huffman_tree_print(tree,0);
     
 }

@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/crc.o \
 	${OBJECTDIR}/derror.o \
 	${OBJECTDIR}/dfile.o \
+	${OBJECTDIR}/dlist.o \
 	${OBJECTDIR}/dmemory.o \
 	${OBJECTDIR}/huffman.o \
 	${OBJECTDIR}/main.o
@@ -81,6 +82,11 @@ ${OBJECTDIR}/dfile.o: dfile.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dfile.o dfile.c
+
+${OBJECTDIR}/dlist.o: dlist.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dlist.o dlist.c
 
 ${OBJECTDIR}/dmemory.o: dmemory.c 
 	${MKDIR} -p ${OBJECTDIR}

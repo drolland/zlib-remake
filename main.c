@@ -19,7 +19,9 @@ int main(int argc, char** argv) {
     char *buffer = NULL;  
     int buffer_size = file_read_into_buffer(&buffer,"test2.txt");
     
-    huffman_encode("abc",sizeof("abc"));
+    char string[5] = "abbc";
+    huffman_encode("this is an example of a huffman tree",sizeof("this is an example of a huffman tree")-1);
+    huffman_encode("abcdef",sizeof("abcdef")-1);
     printf("my_hash %x\n",my_hash(buffer,buffer_size));
     
     printf("a     %x\n",my_hash("a",1));
