@@ -15,13 +15,13 @@ CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Debug=huffman.tar
 CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/huffman.tar
 # Release configuration
-CND_PLATFORM_Release=MinGW64-Windows
-CND_ARTIFACT_DIR_Release=dist/Release/MinGW64-Windows
+CND_PLATFORM_Release=GNU-Linux-x86
+CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
 CND_ARTIFACT_NAME_Release=huffman
-CND_ARTIFACT_PATH_Release=dist/Release/MinGW64-Windows/huffman
-CND_PACKAGE_DIR_Release=dist/Release/MinGW64-Windows/package
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/huffman
+CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=huffman.tar
-CND_PACKAGE_PATH_Release=dist/Release/MinGW64-Windows/package/huffman.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/huffman.tar
 #
 # include compiler specific variables
 #

@@ -16,13 +16,14 @@
  */
 int main(int argc, char** argv) {
 
+    DBinaryTree* huff_tree;
+    
     char *buffer = NULL;  
-    int buffer_size = file_read_into_buffer(&buffer,"test2.txt");
-    
-    //DBinaryTree* huff_tree = huff_build_tree("this is an example of a huffman tree",sizeof("this is an example of a huffman tree")-1);
-    DBinaryTree* huff_tree = huff_build_tree("aabcdefffgggggggggxyzkmnppppppppppppppppp",sizeof("aabcdefffgggggggggxyzkmnppppppppppppppppp")-1);
-    huff_dbg_print_tree(huff_tree);
-    
+    int buffer_size = file_read_into_buffer(&buffer,"test.bmp");
+    huff_tree = huff_build_tree(buffer,512); 
+       
+    HuffTreeStats* stats = huff_compute_tree_stats(huff_tree);
+    huff_print_tree_stats(stats);
     
     return (EXIT_SUCCESS);
 }

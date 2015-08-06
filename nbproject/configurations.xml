@@ -93,6 +93,8 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <standard>10</standard>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -103,6 +105,9 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <commandLine>-lcairo -lm</commandLine>
+        </linkerTool>
       </compileType>
       <item path="crc.c" ex="false" tool="0" flavor2="0">
       </item>
