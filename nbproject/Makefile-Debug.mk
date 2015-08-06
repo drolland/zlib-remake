@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/crc.o \
+	${OBJECTDIR}/dbinarytree.o \
 	${OBJECTDIR}/derror.o \
 	${OBJECTDIR}/dfile.o \
 	${OBJECTDIR}/dlist.o \
@@ -72,6 +73,11 @@ ${OBJECTDIR}/crc.o: crc.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/crc.o crc.c
+
+${OBJECTDIR}/dbinarytree.o: dbinarytree.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbinarytree.o dbinarytree.c
 
 ${OBJECTDIR}/derror.o: derror.c 
 	${MKDIR} -p ${OBJECTDIR}

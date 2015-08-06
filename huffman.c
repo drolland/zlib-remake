@@ -93,7 +93,7 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
 
     /* DEBUG : Display weight table*/
     for (int i = 0; i < 256; i++) {
-        printf("%d : %d\n", i, weight_table[i]);
+        //printf("%d : %d\n", i, weight_table[i]);
     }
     
     /* Create a list of DBinaryTree Leafs containing symbols sorted by weight from weight table */
@@ -196,21 +196,25 @@ HuffTreeStats* huff_compute_tree_stats(DBinaryTree* tree){
     HuffTreeStats* stats = (HuffTreeStats*)checked_malloc(sizeof(HuffTreeStats));
     memset(stats,0,sizeof(HuffTreeStats));
     huff_compute_tree_node_stats_recursive(stats,tree,0);
+    stats->block_uncompressed_size = stats->total_weight * 8;
+    stats->block_compressed_size = stats->total_bit_size;
+    stats->block_compression_ratio = (float)stats->total_bit_size / stats->total_weight / 8.0f;
+    stats->tree_size_estimation = stats->nb_symbols * ( 4 + 6 ) + 8;
+    stats->total_compression_ratio_estimation = (stats->tree_size_estimation + (float)stats->total_bit_size) / stats->total_weight / 8.0f ;
     return stats;
 }
 
 void huff_print_tree_stats(HuffTreeStats* stats){
     printf("*-- Tree Stats --*\n");
     printf("Number of symbol : %d\n",stats->nb_symbols);
-    printf("Uncompressed Block Size : %d bits\n",stats->total_weight * 8);
-    printf("Compressed Block Size : %d bits \n",stats->total_bit_size);
-    printf("Block Compression Ratio : %f\n",(float)stats->total_bit_size / stats->total_weight / 8.0f );
+    printf("Uncompressed Block Size : %d bits\n",stats->block_uncompressed_size);
+    printf("Compressed Block Size : %d bits \n",stats->block_compressed_size);
+    printf("Block Compression Ratio : %f\n",stats->block_compression_ratio );
     float estimation_of_tree_size_1 = 8 + stats->nb_symbols * 16;
-    float estimation_of_tree_size_2 = stats->nb_symbols * ( 3 + 6 ) + 8;
     printf("Estimation 1 of Tree Size : %f bits\n",estimation_of_tree_size_1 );
-    printf("Estimation 2 of Tree Size : %f bits\n",estimation_of_tree_size_2 );
+    printf("Estimation 2 of Tree Size : %f bits\n",stats->tree_size_estimation );
     printf("Estimation 1 of total compression ratio : %f bits\n", (estimation_of_tree_size_1 + (float)stats->total_bit_size) / stats->total_weight / 8.0f );
-    printf("Estimation 2 of total compression ratio : %f bits\n", (estimation_of_tree_size_2 + (float)stats->total_bit_size) / stats->total_weight / 8.0f );
+    printf("Estimation 2 of total compression ratio : %f bits\n", stats->total_compression_ratio_estimation );
     printf("Max code length : %d\n",stats->max_code_length);
 }
 

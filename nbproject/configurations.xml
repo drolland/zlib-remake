@@ -20,6 +20,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>crc.c</itemPath>
+      <itemPath>dbinarytree.c</itemPath>
       <itemPath>derror.c</itemPath>
       <itemPath>dfile.c</itemPath>
       <itemPath>dlist.c</itemPath>
@@ -59,6 +60,8 @@
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="dbinarytree.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="dbinarytree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="derror.c" ex="false" tool="0" flavor2="0">
@@ -92,7 +95,7 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <developmentMode>5</developmentMode>
+          <developmentMode>0</developmentMode>
           <architecture>2</architecture>
           <standard>10</standard>
         </cTool>
@@ -112,6 +115,8 @@
       <item path="crc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dbinarytree.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbinarytree.h" ex="false" tool="3" flavor2="0">
       </item>

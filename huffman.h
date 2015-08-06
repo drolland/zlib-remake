@@ -22,6 +22,14 @@ typedef struct huff_tree_stats{
     int max_code_length;
     int total_bit_size;
     
+    /* Compression estimation computed from above*/
+    
+    int block_uncompressed_size;
+    int block_compressed_size; 
+    float block_compression_ratio;
+    int tree_size_estimation;
+    float total_compression_ratio_estimation;
+ 
 } HuffTreeStats;
 
 HuffTreeStats* huff_compute_tree_stats(DBinaryTree* tree);

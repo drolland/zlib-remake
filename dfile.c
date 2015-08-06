@@ -22,6 +22,7 @@ int file_read_into_buffer(char** buffer, char* file_path){
  
     assert( length == nb_read);
     
+    close(fd);
     return nb_read;
       
 }

@@ -7,6 +7,5 @@ typedef struct dbinary_tree {
 } DBinaryTree;
 
 
-DBinaryTree* dbinary_tree_append_right(DBinaryTree** tree,void* to_insert);
-DBinaryTree* dbinary_tree_append_left(DBinaryTree** tree,void* to_insert);
+void dbinary_tree_free_full(DBinaryTree* tree);
 
