@@ -1,10 +1,13 @@
 #pragma once
-#include "derror.h"
+
+#include "dbinarytree.h"
 
 
 
+DBinaryTree* huff_build_tree(char* str,size_t len);
+void huff_dbg_print_tree(DBinaryTree* tree);
 
-void huffman_encode(char* str,size_t len);
+
 
 
 

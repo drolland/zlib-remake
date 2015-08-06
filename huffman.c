@@ -7,6 +7,8 @@
 #include "huffman.h"
 #include "dmemory.h"
 #include "dlist.h"
+#include "dbinarytree.h"
+#include "derror.h"
 
 #define MAX(a,b) a > b ? a : b
 
@@ -16,64 +18,167 @@ enum {
 };
 
 
-typedef struct huffman_tree_node {
-    struct huffman_tree_node* next;
-    struct huffman_tree_node* rhl; /* Right leaf */
-    struct huffman_tree_node* lhl; /* Left leaf */
+typedef struct huff_symbol {
     unsigned int weight;
-    char symbol;
-} Huffman_Tree_Node;
+    int value;
+} Huff_Symbol;
 
-void huffman_weight_list_insert(Huffman_Tree_Node** list, Huffman_Tree_Node* to_insert) {
+
+DList* huff_list_insert_tree_node_sorted_by_weight(DList* list, DBinaryTree* to_insert) {
 
     assert(to_insert != NULL);
 
     /* Ignore symbols with a weight of zero*/
-    if ( to_insert->weight == 0)
-        return;
+    if ( ((Huff_Symbol*)to_insert->content)->weight == 0)
+        return list;
     
-    if (*list == NULL) {
-        *list = to_insert;
-        return;
+    DList* new_element = ( DList*)checked_malloc(sizeof(DList*));
+    new_element->content = to_insert;
+    new_element->next = NULL;
+    
+    if (list == NULL) {
+        list = new_element;
+        return list;
     } 
     
-    if (  to_insert->weight < (*list)->weight   ){ 
-        Huffman_Tree_Node* temp = *list;
-        *list = to_insert;
-        (*list)->next = temp;
-        return;
+    Huff_Symbol* current_symbol = ((DBinaryTree*)list->content)->content;
+    
+    if (  ((Huff_Symbol*)to_insert->content)->weight < current_symbol->weight   ){ 
+        DList* temp = list;
+        list = new_element;
+        list->next = temp;
+        return list;
     }
         
-    Huffman_Tree_Node* current = *list;
+    DList* current = list;
+    Huff_Symbol* current_next_symbol = NULL;
            
     while (current->next != NULL){
-            if ( to_insert->weight < current->next->weight ){
-                Huffman_Tree_Node* temp = current->next;
-                current->next = to_insert;
-                current->next->next = temp;
-                return;
-            }
-            else {
-            current = current->next;  
-            }
-        }      
-    current->next = to_insert;
+        assert(current->next->content != NULL);
+        current_next_symbol = ((DBinaryTree*)current->next->content)->content;
+        if ( ((Huff_Symbol*)to_insert->content)->weight < current_next_symbol->weight ){
+            DList* temp = current->next;
+            current->next = new_element;
+            new_element->next = temp;
+            return list;
+        }
+        else {
+        current = current->next;  
+        }
+    }      
+    current->next = new_element;
+    return list;
 }
 
 
-void huffman_weight_list_print(Huffman_Tree_Node* list){
-    Huffman_Tree_Node* current = list;
+void huff_weight_list_print(DList* list){
+    DList* current = list;
+    Huff_Symbol* current_symbol;
     while(current != NULL){
-        printf("symbol '%c', weight %d\n",current->symbol,current->weight);
+        current_symbol = current->content;
+        printf("symbol '%c', weight %d\n",current_symbol->value,current_symbol->weight);
         current = current->next;
     }
+}
+
+
+
+DBinaryTree* huff_build_tree(char *str, size_t len) {
+
+    /* Weight table for the ascii alphabet*/
+    unsigned int weight_table[256];
+    memset(weight_table, 0, 256 * sizeof (unsigned int)); /* Zero weight table */
+
+    /* Read the string in one pass and store weight for each symbol in the weight table*/
+    for (int i = 0; i < len; i++) {
+        weight_table[str[i]]++;
+    }
+
+    /* DEBUG : Display weight table*/
+    for (int i = 0; i < 256; i++) {
+        printf("%d : %d\n", i, weight_table[i]);
+    }
+    
+    /* Create a list of DBinaryTree Leafs containing symbols sorted by weight from weight table */
+    
+   DList* leaf_list = NULL;
+   Huff_Symbol* to_insert = NULL;
+   for (int i = 0; i < 256; i++) {
+        DBinaryTree* leaf = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));
+        to_insert = (Huff_Symbol*)checked_malloc(sizeof(Huff_Symbol));       
+        to_insert->weight = weight_table[i];
+        to_insert->value = i;
+        leaf->content = to_insert;
+        leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,leaf);
+    }
+     
+    /* Build huffman tree*/
+    DBinaryTree* huff_tree = NULL;
+    
+    assert(leaf_list != NULL);
+    /* If only one symbol, tree has a single leaf*/
+    if ( leaf_list->next == NULL){
+        huff_tree = leaf_list->content; 
+        dlist_free(leaf_list);
+        return huff_tree;
+    }
+    
+     /* Create a new node from two symbols  */
+    DBinaryTree* new_node = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));  
+    Huff_Symbol* new_content = (Huff_Symbol*)checked_malloc(sizeof(Huff_Symbol));
+    assert ( leaf_list != NULL && leaf_list->next != NULL);
+    new_node->content = new_content;
+    new_node->left = leaf_list->content;
+    new_node->right = leaf_list->next->content;
+    new_content->weight = ((Huff_Symbol*)(new_node->left->content))->weight + ((Huff_Symbol*)(new_node->right->content))->weight;
+    
+    if ( leaf_list->next->next == NULL){
+        /* If only two symbol, tree has a single node with two leaf*/     
+        huff_tree = new_node;
+        dlist_free(leaf_list);
+        return huff_tree;
+    }
+    
+    /* remove the two symbols from the list, do list elements mem cleanup */
+    DList* temp = leaf_list;
+    leaf_list = leaf_list->next->next; 
+    free(temp->next);
+    free(temp);
+    
+    /* Put the newly created node in the list*/
+    leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,new_node);
+    
+     /* Procced for each remaining pair of symbol */
+    while(leaf_list->next != NULL){
+        
+        new_node = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));  
+        new_content = (Huff_Symbol*)checked_malloc(sizeof(Huff_Symbol));
+        new_node->content = new_content;
+        new_node->left = leaf_list->content;
+        new_node->right = leaf_list->next->content;
+        new_content->weight = ((Huff_Symbol*)(new_node->left->content))->weight + ((Huff_Symbol*)(new_node->right->content))->weight;
+        
+        /* remove the two symbols from the list, do list elements mem cleanup */
+        temp = leaf_list;
+        leaf_list = leaf_list->next->next; 
+        free(temp->next);
+        free(temp);
+        
+        leaf_list = dlist_append(leaf_list,new_node);                
+    }
+    
+    huff_tree = leaf_list->content;
+    dlist_free(leaf_list);
+    return huff_tree;
+   
 }
 
 const int WIDTH = 1024 * 4 ;
 const int HEIGHT = 768 * 4 ;
 const float STEP = 50.0f ;
 
-void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
+
+void draw_dbg_print_node_recursive(cairo_t* cr, DBinaryTree* node,int depth){
    
     
     cairo_save(cr);
@@ -83,8 +188,8 @@ void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
         
     cairo_text_extents_t te;
     char text[2];
-    text[0] = node->symbol;
-    if ( node->symbol == ' ')
+    text[0] = ((Huff_Symbol*)node->content)->value;
+    if ( ((Huff_Symbol*)node->content)->value == ' ')
         text[0] = '_';
     text[1] = '\0';
     
@@ -97,34 +202,34 @@ void draw_tree_node_recursive(cairo_t* cr, Huffman_Tree_Node* node,int depth){
     cairo_restore(cr);
     
 
-    /*char buffer[16];
-    sprintf(buffer,"%d",node->depth);
+    char buffer[16];
+    sprintf(buffer,"%d",((Huff_Symbol*)node->content)->weight);
     cairo_set_font_size(cr,STEP / 2.0f);
     cairo_text_extents (cr, buffer, &te);
     cairo_move_to (cr, - te.x_bearing - te.width / 2, STEP * 1.5f - te.y_bearing - te.height / 2);
     cairo_show_text (cr,buffer);
-    cairo_stroke (cr);*/
+    cairo_stroke (cr);
     
     int translate_distance = ( WIDTH + 800 )/ ( pow(2,depth) + 1 ) / 2;
     
-    if ( node->rhl != NULL ){
+    if ( node->right != NULL ){
         cairo_save(cr);
         cairo_translate(cr, translate_distance ,  STEP * 4 );
-        draw_tree_node_recursive(cr,node->rhl,depth+1);
+        draw_dbg_print_node_recursive(cr,node->right,depth+1);
         cairo_restore(cr);
     }
     
-    if ( node->lhl != NULL ){
+    if ( node->left != NULL ){
         cairo_save(cr);
         cairo_translate(cr,- translate_distance,  STEP * 4);
-        draw_tree_node_recursive(cr,node->lhl,depth+1);
+        draw_dbg_print_node_recursive(cr,node->left,depth+1);
         cairo_restore(cr);
     }
 
     
 }
 
-void huffman_tree_print(Huffman_Tree_Node* tree,int depth){
+void huff_dbg_print_tree(DBinaryTree* tree){
     
     cairo_surface_t* surface;
     cairo_t* cr;
@@ -140,107 +245,7 @@ void huffman_tree_print(Huffman_Tree_Node* tree,int depth){
     cairo_set_line_width(cr,2);
     cairo_set_source_rgb(cr,1,1,1);
     
-    draw_tree_node_recursive(cr,tree,1);      
+    draw_dbg_print_node_recursive(cr,tree,1);      
     
     cairo_surface_write_to_png (surface,"tree.png");
-}
-
-void huffman_build_weight_list(Huffman_Tree_Node** weight_list,DList** alphabet_list,char *str, int len) {
-
-    unsigned int weight_table[256];
-    memset(weight_table, 0, 256 * sizeof (unsigned int)); /* Zero weight table */
-
-    /* Read the string in one pass and store weight for each symbol in the weight table*/
-    for (int i = 0; i < len; i++) {
-        weight_table[str[i]]++;
-    }
-
-    /* Display weight table*/
-    for (int i = 0; i < 256; i++) {
-        printf("%d : %d\n", i, weight_table[i]);
-    }
-
-    /* Convert weight table into weight list*/
-    Huffman_Tree_Node* list = NULL;
-    Huffman_Tree_Node* to_insert = NULL;
-    for (int i = 0; i < 256; i++) {
-        to_insert = (Huffman_Tree_Node*)checked_malloc(sizeof(Huffman_Tree_Node));       
-        to_insert->next = NULL;
-        to_insert->rhl = NULL;
-        to_insert->lhl = NULL;
-        to_insert->weight = weight_table[i];
-        to_insert->symbol = i;
-        huffman_weight_list_insert(&list,to_insert);
-        dlist_append(alphabet_list,to_insert);
-    }
-
-    /* DEBUG : Display sorted weight list*/
-    huffman_weight_list_print(list);
-    
-    /* Output in parameter, the calcucated sym wight list*/
-    *weight_list = list;
-
-}
-
-void huffman_build_tree(Huffman_Tree_Node** tree,DList** alphabet_list,Huffman_Tree_Node* list){
-    
-    assert(list != NULL);
-           
-    /* If only one symbol, tree has a single leaf*/
-    if ( list->next == NULL){
-        assert(list->next == NULL);
-        *tree = list; 
-        return;
-    }
-        
-    /* Create a new node from two symbols  */
-    Huffman_Tree_Node* new_node = (Huffman_Tree_Node*)checked_malloc(sizeof(Huffman_Tree_Node));  
-    new_node->next = NULL;
-    assert ( list != NULL && list->next != NULL);
-    new_node->lhl = list;
-    new_node->rhl = list->next;
-    new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
-    
-    if ( list->next->next == NULL){
-        /* If only two symbol, tree has a single node with two leaf*/
-        *tree = list;
-        return;
-    }
-    
-    /* remove the two symbols from the list */
-    list = list->next->next; 
-    
-    /* Put the newly created node in the list*/
-    huffman_weight_list_insert(&list,new_node);
-      
-    
-    /* Procced for each remaining pair of symbol */
-    while(list->next != NULL){
-        
-        new_node = (Huffman_Tree_Node*)checked_malloc(sizeof(Huffman_Tree_Node));
-        new_node->next = NULL;
-        new_node->lhl = list;
-        new_node->rhl = list->next;
-        new_node->weight = new_node->lhl->weight + new_node->rhl->weight;
-        /*new_node->depth = MAX(new_node->lhl->depth,new_node->rhl->depth);
-        new_node->depth++;*/
-        list = list->next->next; 
-        dlist_append(alphabet_list,new_node);
-                
-    }
-    
-    *tree = list;
-    
-}
-
-
-void huffman_encode(char* str, size_t len) {
-    
-    Huffman_Tree_Node* weight_list = NULL;
-    Huffman_Tree_Node* tree = NULL;
-    DList* alphabet_list = NULL;
-    huffman_build_weight_list(&weight_list,&alphabet_list,str,len);
-    huffman_build_tree(&tree,&alphabet_list,weight_list);
-    huffman_tree_print(tree,0);
-    
 }

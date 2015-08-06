@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>crc.h</itemPath>
+      <itemPath>dbinarytree.h</itemPath>
       <itemPath>derror.h</itemPath>
       <itemPath>dfile.h</itemPath>
       <itemPath>dlist.h</itemPath>
@@ -58,6 +59,8 @@
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="dbinarytree.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="derror.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="derror.h" ex="false" tool="3" flavor2="0">
@@ -104,6 +107,8 @@
       <item path="crc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dbinarytree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="derror.c" ex="false" tool="0" flavor2="0">
       </item>
