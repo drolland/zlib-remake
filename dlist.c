@@ -26,24 +26,6 @@ DList* dlist_append(DList* list,void* to_insert){
     return list;
 }
 
-
-/* Insert an data after provided list element
- * Return the new element
- */
-DList* dlist_insert_after(DList* element,void* to_insert){
-    
-    assert(to_insert != NULL);
-    assert(element != NULL);
-    
-    DList* new_element = (DList*)checked_malloc(sizeof(DList));
-    new_element->content = to_insert;
-    new_element->next = element->next;
-    element->next = new_element;
-     
-    return new_element;
-
-}
-
 /* Free a list but not is content
  */
 void dlist_free(DList* list){

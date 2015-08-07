@@ -3,7 +3,7 @@
 from pylab import *
 import re
 
-file = open("graph1.txt","r")
+file = open("graph2.txt","r")
 
 r = re.compile(" ")
 

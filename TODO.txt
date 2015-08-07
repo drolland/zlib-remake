@@ -1,20 +1,28 @@
 
-/* DETAILLED TODO */
-
-Huffman compressed file struct :
-INT32 : Nb char
-Huffman tree INT 32: Nb symbols
-Huffman tree : symbol / code_length / code 
-Data 
-
 /* TODO */
-- 	Clean up list and binary tree, with separate structures.
--	Create BitStream type ( Should be able to output to memory, as well as to files */
--	Provides following huffman fonction
-	DBinaryTree*	Huffman_Build_Tree(char* str,size_t* len);
-	int	Huffman_Encode(BitStream* stream,char* str,size_t len);
--	Test compression, Test Decompression ( MD5sum ?)
--	Test compression at different "block fixed size"
--	Idea : Adaptative compression -> Guess best size for each block from build tree infp.
+
+- Create BitStream type ( Should be able to output to memory, as well as to files )
+- Compress the file effectively and compare estimated compression ratio to real compression ratio ( SHould be the quite the same as the prediction on block is quite easy... )
+  * Header should be defined this way
+    One Byte : Number of symbols
+    Then for each symbol  
+    Code length size special bit: 1 bit 
+    Code length : 4 bit if previous is zero, 8 bit if previous is 1	
+    Actual code : 1 bit for each bit of the code
+  Compressing Huffman Tree Header ? GET INFO !!
+-   Test Decompression ( MD5 SUM )
+
+FUTURE :
+
+    *Fixed size compression block size or symbol count seems a no go.  
+    
+    * Compression Max Performance : what can be achieved by Brute Force ( Trying every symbol count for each block ) ?. Conclude. Is it time to implement the second part of compression ?
+   
+    * Adptative compression. GET INFO !! REREAD DEFLATE !!
+     Currently, we need to recompute the whole tree each time a symbol is added in order to
+have a size estimation.
+    IDEA : Is there a way to dynamicly add new symbol to the tree and reorganize it, avoiding a whole rebuild ? kind of Dynamic Huffman Tree
+    
+     	
 
 

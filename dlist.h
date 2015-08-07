@@ -10,11 +10,25 @@ typedef struct dlist{
  */
 DList* dlist_append(DList* list,void* to_insert);
 
-/* Insert an data after provided list element
- * Return the new element
- */
-DList* dlist_insert_after(DList* element,void* to_insert);
+
 
 /* Free a list but not is content
  */
 void dlist_free(DList* list);
+
+/* Search for content match in a list and return the element list containing it or NULL if no match*/
+static inline DList* dlist_search(DList* list,void* to_search){
+    
+    if ( list == NULL)
+        return NULL;
+    
+    if ( list->content == to_search)
+        return list;
+    
+    while(list->next != NULL){
+        list = list->next;
+        if ( list->content == to_search )
+            return list;
+    }
+    return NULL;
+}

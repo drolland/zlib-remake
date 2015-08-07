@@ -33,9 +33,11 @@ int main(int argc, char** argv) {
     
     FILE* fd = fopen("graph1.txt","w");
     
-    for (int i = 2; i < 2048; i+= 8){
+    int buffer_advance = 0;
+    
+    for (int i = 2; i < 256; i+= 1){
         
-        huff_tree = huff_build_tree(buffer,i); 
+        huff_tree = huff_build_tree_max_symbol(&buffer_advance,buffer+33000,i,buffer_size); 
         stats = huff_compute_tree_stats(huff_tree);
         //huff_print_tree_stats(stats);
         
@@ -45,24 +47,37 @@ int main(int argc, char** argv) {
         mpool_release();
     }
     
+
+    
+    
+    fd = fopen("graph2.txt","w");
+    
     // Total file estimated compressed size
     float compression_ratio_sum = 0;
     int block_processed = 0;
     int i = 0;
-    for ( i = 0; i < buffer_size-512; i+= 512){
-        huff_tree = huff_build_tree(buffer+i,512); 
-        stats = huff_compute_tree_stats(huff_tree);
-        compression_ratio_sum += stats->total_compression_ratio_estimation;
-        block_processed++;
+    for( int j = 2; j < 256; j+=1){
+        compression_ratio_sum = 0;
+        block_processed = 0;
+        int total_advance = 0;
+        while ( total_advance < buffer_size ){
+            huff_tree = huff_build_tree_max_symbol(&buffer_advance,buffer+total_advance,j,buffer_size - total_advance); 
+            total_advance += buffer_advance;
+            stats = huff_compute_tree_stats(huff_tree);
+            compression_ratio_sum += stats->total_compression_ratio_estimation;
+            block_processed++;
+            //huff_print_tree_stats(stats);
+            free(stats);
+            mpool_release();
+        }
+         fprintf(fd,"%d %f\n",j,compression_ratio_sum / block_processed);
+         fprintf(stdout,"%d %f\n",j,compression_ratio_sum / block_processed);
+        }
         
-        free(stats);
-        mpool_release();
-    }
-    printf("Total file compression ratio estimation %f", compression_ratio_sum / block_processed);
-    
+    fclose(fd);
     mpool_free();
     free(buffer);
-    fclose(fd);
+    
     
     
     exit(EXIT_SUCCESS);

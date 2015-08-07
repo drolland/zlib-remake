@@ -11,6 +11,7 @@ typedef struct huff_symbol {
  *  Returns a Huffman Tree ( A DBinaryTree with Huff_Symbol for content )
  */
 DBinaryTree* huff_build_tree(char* str,size_t len);
+DBinaryTree* huff_build_tree_max_symbol(int* buffer_advance,char *str, int max_symbol,size_t maxlen);
 
 void huff_dbg_print_tree(DBinaryTree* tree);
 

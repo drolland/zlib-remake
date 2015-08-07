@@ -71,7 +71,114 @@ void huff_weight_list_print(DList* list){
     }
 }
 
+DBinaryTree* huff_build_tree_max_symbol(int* buffer_advance,char *str, int max_symbol,size_t maxlen) {
 
+    /* Weight table for the ascii alphabet*/
+    int weight_table[256];
+    memset(weight_table, 0, 256 * sizeof (int)); /* Zero weight table */
+
+    char symbol_already_read[256];
+    memset(symbol_already_read,FALSE,256 * sizeof(char));
+    int symbol_count = 0;
+    
+    /* Read the string in one pass and store weight for each symbol in the weight table*/
+    for (*buffer_advance = 0; *buffer_advance < maxlen; (*buffer_advance)++) {
+        if ( symbol_already_read[(unsigned char)str[*buffer_advance]] == FALSE){
+            symbol_count++;
+            symbol_already_read[(unsigned char)str[*buffer_advance]] = TRUE;
+            if ( symbol_count > max_symbol )
+                break;
+                
+        }          
+        weight_table[(unsigned char)str[*buffer_advance]]++;
+    }
+    
+
+    /* DEBUG : Display weight table*/
+    for (int i = 0; i < 256; i++) {
+        //printf("%d : %d\n", i, weight_table[i]);
+    }
+    
+    /* Create a list of DBinaryTree Leafs containing symbols sorted by weight from weight table */
+    
+   DList* leaf_list = NULL;
+   HuffSymbol* symbol = NULL;
+   DBinaryTree* leaf;
+   for (int i = 0; i < 256; i++) {
+       if ( weight_table[i] != 0){
+            leaf = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree));
+            symbol = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));       
+            symbol->weight = weight_table[i];
+            symbol->value = i;
+            leaf->content = symbol;
+            leaf->left = NULL;
+            leaf->right = NULL;
+            leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,leaf);
+        }
+    }
+     
+    /* Build huffman tree*/
+    DBinaryTree* huff_tree = NULL;
+    
+    assert(leaf_list != NULL);
+    /* If only one symbol, tree has a single leaf*/
+    if ( leaf_list->next == NULL){
+        huff_tree = leaf_list->content; 
+        //free(leaf_list);
+        return huff_tree;
+    }
+    
+     /* Create a new node from two symbols  */
+    DBinaryTree* new_node = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree)); 
+    HuffSymbol* new_content = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));
+    assert ( leaf_list != NULL && leaf_list->next != NULL);
+    new_node->content = new_content;
+    new_node->left = leaf_list->content;
+    new_node->right = leaf_list->next->content;
+    new_content->weight = ((HuffSymbol*)(new_node->left->content))->weight + ((HuffSymbol*)(new_node->right->content))->weight;
+    
+    if ( leaf_list->next->next == NULL){
+        /* If only two symbol, tree has a single node with two leaf*/     
+        huff_tree = new_node;
+        //free(leaf_list->next);
+        //free(leaf_list);
+        return huff_tree;
+    }
+    
+    /* remove the two symbols from the list, do list elements mem cleanup */
+    DList* temp = leaf_list;
+    leaf_list = leaf_list->next->next; 
+    //free(temp->next);
+    //free(temp);
+    
+    /* Put the newly created node in the list*/
+    leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,new_node);
+    
+     /* Procced for each remaining pair of symbol */
+    while(leaf_list->next != NULL){
+        
+        new_node = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree));  
+        new_content = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));
+        new_node->content = new_content;
+        new_node->left = leaf_list->content;
+        new_node->right = leaf_list->next->content;
+        new_content->weight = ((HuffSymbol*)(new_node->left->content))->weight + ((HuffSymbol*)(new_node->right->content))->weight;
+        
+        /* remove the two symbols from the list, do list elements mem cleanup */
+        temp = leaf_list;
+        leaf_list = leaf_list->next->next; 
+        //free(temp->next);
+        //free(temp);
+        
+        leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,new_node);                
+    }
+    
+    huff_tree = leaf_list->content;
+    //free(leaf_list);
+    
+    return huff_tree;
+   
+}
 
 DBinaryTree* huff_build_tree(char *str, size_t len) {
 
@@ -182,6 +289,7 @@ void huff_compute_tree_node_stats_recursive(HuffTreeStats* stats,DBinaryTree* no
         stats->weight[((HuffSymbol*)node->content)->value] = ((HuffSymbol*)node->content)->weight;
         stats->code_length[((HuffSymbol*)node->content)->value] = depth;
         if ( depth > stats->max_code_length) stats->max_code_length = depth;
+
     }
     else {
         assert(node->left != NULL && node->right != NULL);
@@ -208,9 +316,9 @@ void huff_print_tree_stats(HuffTreeStats* stats){
     printf("Uncompressed Block Size : %d bits\n",stats->block_uncompressed_size);
     printf("Compressed Block Size : %d bits \n",stats->block_compressed_size);
     printf("Block Compression Ratio : %f\n",stats->block_compression_ratio );
-    float estimation_of_tree_size_1 = 8 + stats->nb_symbols * 16;
-    printf("Estimation 1 of Tree Size : %f bits\n",estimation_of_tree_size_1 );
-    printf("Estimation 2 of Tree Size : %f bits\n",stats->tree_size_estimation );
+    int estimation_of_tree_size_1 = 8 + stats->nb_symbols * 16;
+    printf("Estimation 1 of Tree Size : %d bits\n",estimation_of_tree_size_1 );
+    printf("Estimation 2 of Tree Size : %d bits\n",stats->tree_size_estimation );
     printf("Estimation 1 of total compression ratio : %f bits\n", (estimation_of_tree_size_1 + (float)stats->total_bit_size) / stats->total_weight / 8.0f );
     printf("Estimation 2 of total compression ratio : %f bits\n", stats->total_compression_ratio_estimation );
     printf("Max code length : %d\n",stats->max_code_length);
