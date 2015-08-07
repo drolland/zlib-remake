@@ -18,18 +18,11 @@ enum {
 };
 
 
-
-
-
 DList* huff_list_insert_tree_node_sorted_by_weight(DList* list, DBinaryTree* to_insert) {
 
     assert(to_insert != NULL);
-
-    /* Ignore symbols with a weight of zero*/
-    if ( ((HuffSymbol*)to_insert->content)->weight == 0)
-        return list;
     
-    DList* new_element = ( DList*)checked_malloc(sizeof(DList*));
+    DList* new_element = (DList*)mpool_alloc(sizeof(DList));
     new_element->content = to_insert;
     new_element->next = NULL;
     
@@ -100,15 +93,18 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
     
    DList* leaf_list = NULL;
    HuffSymbol* symbol = NULL;
+   DBinaryTree* leaf;
    for (int i = 0; i < 256; i++) {
-        DBinaryTree* leaf = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));
-        symbol = (HuffSymbol*)checked_malloc(sizeof(HuffSymbol));       
-        symbol->weight = weight_table[i];
-        symbol->value = i;
-        leaf->content = symbol;
-        leaf->left = NULL;
-        leaf->right = NULL;
-        leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,leaf);
+       if ( weight_table[i] != 0){
+            leaf = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree));
+            symbol = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));       
+            symbol->weight = weight_table[i];
+            symbol->value = i;
+            leaf->content = symbol;
+            leaf->left = NULL;
+            leaf->right = NULL;
+            leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,leaf);
+        }
     }
      
     /* Build huffman tree*/
@@ -118,13 +114,13 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
     /* If only one symbol, tree has a single leaf*/
     if ( leaf_list->next == NULL){
         huff_tree = leaf_list->content; 
-        dlist_free(leaf_list);
+        //free(leaf_list);
         return huff_tree;
     }
     
      /* Create a new node from two symbols  */
-    DBinaryTree* new_node = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));  
-    HuffSymbol* new_content = (HuffSymbol*)checked_malloc(sizeof(HuffSymbol));
+    DBinaryTree* new_node = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree)); 
+    HuffSymbol* new_content = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));
     assert ( leaf_list != NULL && leaf_list->next != NULL);
     new_node->content = new_content;
     new_node->left = leaf_list->content;
@@ -134,15 +130,16 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
     if ( leaf_list->next->next == NULL){
         /* If only two symbol, tree has a single node with two leaf*/     
         huff_tree = new_node;
-        dlist_free(leaf_list);
+        //free(leaf_list->next);
+        //free(leaf_list);
         return huff_tree;
     }
     
     /* remove the two symbols from the list, do list elements mem cleanup */
     DList* temp = leaf_list;
     leaf_list = leaf_list->next->next; 
-    free(temp->next);
-    free(temp);
+    //free(temp->next);
+    //free(temp);
     
     /* Put the newly created node in the list*/
     leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,new_node);
@@ -150,8 +147,8 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
      /* Procced for each remaining pair of symbol */
     while(leaf_list->next != NULL){
         
-        new_node = (DBinaryTree*)checked_malloc(sizeof(DBinaryTree));  
-        new_content = (HuffSymbol*)checked_malloc(sizeof(HuffSymbol));
+        new_node = (DBinaryTree*)mpool_alloc(sizeof(DBinaryTree));  
+        new_content = (HuffSymbol*)mpool_alloc(sizeof(HuffSymbol));
         new_node->content = new_content;
         new_node->left = leaf_list->content;
         new_node->right = leaf_list->next->content;
@@ -160,14 +157,15 @@ DBinaryTree* huff_build_tree(char *str, size_t len) {
         /* remove the two symbols from the list, do list elements mem cleanup */
         temp = leaf_list;
         leaf_list = leaf_list->next->next; 
-        free(temp->next);
-        free(temp);
+        //free(temp->next);
+        //free(temp);
         
-        leaf_list = dlist_append(leaf_list,new_node);                
+        leaf_list = huff_list_insert_tree_node_sorted_by_weight(leaf_list,new_node);                
     }
     
     huff_tree = leaf_list->content;
-    dlist_free(leaf_list);
+    //free(leaf_list);
+    
     return huff_tree;
    
 }

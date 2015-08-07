@@ -10,6 +10,7 @@
 #include "huffman.h"
 #include "crc.h"
 #include "dfile.h"
+#include "dmemory.h"
 #include <assert.h>
 /*
  * 
@@ -26,23 +27,25 @@ int main(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
     
+    huff_tree = huff_build_tree(buffer,512); 
+    mpool_release();
     
-            
+    
     FILE* fd = fopen("graph1.txt","w");
     
-    for (int i = 2; i < 4096; i+= 2){
+    for (int i = 2; i < 2048; i+= 8){
         
-        huff_tree = huff_build_tree(buffer+50000,i); 
+        huff_tree = huff_build_tree(buffer,i); 
         stats = huff_compute_tree_stats(huff_tree);
         //huff_print_tree_stats(stats);
         
         fprintf(fd,"%d %f\n",i,stats->total_compression_ratio_estimation);
         
         free(stats);
-        dbinary_tree_free_full(huff_tree);
+        mpool_release();
     }
     
-     //Total file estimated compressed size
+    // Total file estimated compressed size
     float compression_ratio_sum = 0;
     int block_processed = 0;
     int i = 0;
@@ -51,14 +54,17 @@ int main(int argc, char** argv) {
         stats = huff_compute_tree_stats(huff_tree);
         compression_ratio_sum += stats->total_compression_ratio_estimation;
         block_processed++;
+        
         free(stats);
-        dbinary_tree_free_full(huff_tree);
+        mpool_release();
     }
     printf("Total file compression ratio estimation %f", compression_ratio_sum / block_processed);
     
+    mpool_free();
+    free(buffer);
+    fclose(fd);
     
-    close(fd);
     
-    return (EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 

@@ -10,5 +10,6 @@ for j in range(0,16):
 bits = bytes(list_int)
 print(bits)
 	
+print('i love you')
 file.write(bits)
 file.close()
