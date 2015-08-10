@@ -11,19 +11,22 @@
 #include "crc.h"
 #include "dfile.h"
 #include "dmemory.h"
+#include "bitstream.h"
 #include <assert.h>
 /*
  * 
  */
 int main(int argc, char** argv) {
 
-    DBinaryTree* huff_tree = NULL;
+    /*DBinaryTree* huff_tree = NULL;
     HuffTreeStats* stats = NULL;
     
+    char* file_path = "test.bmp";
+    
     char *buffer = NULL;  
-    int buffer_size = file_read_into_buffer(&buffer,"test.bmp");
-    if ( buffer == NULL){
-        printf("Couldn't open file");
+    int buffer_size = file_read_into_buffer(&buffer,file_path);
+    if ( buffer_size == -1){
+        printf("Couldn't open file %s : ",file_path);
         exit(EXIT_FAILURE);
     }
     
@@ -76,8 +79,53 @@ int main(int argc, char** argv) {
         
     fclose(fd);
     mpool_free();
-    free(buffer);
+    free(buffer);*/
+    /*
+    BitStream* file = bitstream_fopen("testbit.txt",BS_WRITE);
+    bitstream_write(file,0);
+    bitstream_write(file,1);
+    bitstream_write(file,0);
+    bitstream_write(file,0);
     
+    bitstream_write(file,1);
+    bitstream_write(file,0);
+    bitstream_write(file,0);
+    bitstream_write(file,1);
+    
+    bitstream_write(file,0);
+    bitstream_write(file,1);
+    bitstream_write(file,0);
+    bitstream_write(file,0);
+    
+    bitstream_write(file,1);
+    bitstream_write(file,0);
+    bitstream_write(file,0);
+    bitstream_write(file,1);
+
+    bitstream_write(file,0);
+    bitstream_write(file,1);
+    bitstream_write(file,0);
+    bitstream_write(file,0);
+    
+    bitstream_write(file,1);
+    
+    bitstream_close(file);
+    
+    char c;
+    file = bitstream_fopen("testbit.txt",BS_READ);
+    while ( ( c = bitstream_read(file) ) != -1){
+        printf("%d ",c);
+    }*/
+    
+    BitStream* file = bitstream_fopen("test.bmp",BS_READ);
+    BitStream* file_out = bitstream_fopen("test_out.bmp",BS_WRITE);
+    char character;
+    while ( ( character = bitstream_read(file) ) != -1){
+        bitstream_write(file_out,character);
+    }
+    
+    bitstream_close(file_out);    
+
     
     
     exit(EXIT_SUCCESS);

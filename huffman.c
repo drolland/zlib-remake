@@ -71,7 +71,7 @@ void huff_weight_list_print(DList* list){
     }
 }
 
-DBinaryTree* huff_build_tree_max_symbol(int* buffer_advance,char *str, int max_symbol,size_t maxlen) {
+DBinaryTree* huff_build_tree_fixed_symbol_count(int* buffer_advance,char *str, int max_symbol,size_t maxlen) {
 
     /* Weight table for the ascii alphabet*/
     int weight_table[256];
@@ -180,7 +180,7 @@ DBinaryTree* huff_build_tree_max_symbol(int* buffer_advance,char *str, int max_s
    
 }
 
-DBinaryTree* huff_build_tree(char *str, size_t len) {
+DBinaryTree* huff_build_tree_fixed_size_block(char *str, size_t len) {
 
     /* Weight table for the ascii alphabet*/
     int weight_table[256];

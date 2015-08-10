@@ -2,6 +2,9 @@
 /* TODO */
 
 - Create BitStream type ( Should be able to output to memory, as well as to files )
+    Performance is important.
+    Read file by block buffer.
+    Ilining is surely needed, move to header file
 - Compress the file effectively and compare estimated compression ratio to real compression ratio ( SHould be the quite the same as the prediction on block is quite easy... )
   * Header should be defined this way
     One Byte : Number of symbols
@@ -14,14 +17,15 @@
 
 FUTURE :
 
-    *Fixed size compression block size or symbol count seems a no go.  
+    * Fixed size compression block size or symbol count seems a no go.  
     
     * Compression Max Performance : what can be achieved by Brute Force ( Trying every symbol count for each block ) ?. Conclude. Is it time to implement the second part of compression ?
    
-    * Adptative compression. GET INFO !! REREAD DEFLATE !!
-     Currently, we need to recompute the whole tree each time a symbol is added in order to
-have a size estimation.
-    IDEA : Is there a way to dynamicly add new symbol to the tree and reorganize it, avoiding a whole rebuild ? kind of Dynamic Huffman Tree
+    * Adptative compression. INFO in FIREFOX BOOKMARK. REREAD DEFLATE.
+     
+
+
+     
     
      	
 

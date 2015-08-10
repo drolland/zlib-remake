@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>bitstream.h</itemPath>
       <itemPath>crc.h</itemPath>
       <itemPath>dbinarytree.h</itemPath>
       <itemPath>derror.h</itemPath>
@@ -38,6 +39,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>TODO.txt</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -56,6 +58,8 @@
           <commandLine>-lcairo -lm</commandLine>
         </linkerTool>
       </compileType>
+      <item path="bitstream.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="crc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
@@ -95,9 +99,12 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <developmentMode>5</developmentMode>
+          <developmentMode>6</developmentMode>
           <architecture>2</architecture>
           <standard>10</standard>
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -112,6 +119,8 @@
           <commandLine>-lcairo -lm</commandLine>
         </linkerTool>
       </compileType>
+      <item path="bitstream.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="crc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="crc.h" ex="false" tool="3" flavor2="0">
