@@ -36,14 +36,15 @@ typedef struct huff_tree_stats{
     int total_weight;
     int code_length[256];
     int max_code_length;
-    int total_bit_size;
+    int total_block_bit_size;
     
     /* Compression estimation computed from above*/
     
     int block_uncompressed_size;
     int block_compressed_size; 
     float block_compression_ratio;
-    int tree_size_estimation;
+    int tree_bits_size_estimation;
+    int total_bits_size;
     float total_compression_ratio_estimation;
  
 } HuffTreeStats;

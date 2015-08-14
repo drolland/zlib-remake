@@ -12,9 +12,10 @@ enum {      // Open Mode
     BS_WRITE          
 };
 
-static inline  BitStream* bitstream_fopen(char* path,int open_mode);
-static inline  void bitstream_close(BitStream* bs);
-static inline  void bitstream_write(BitStream* bs,char bit);
+static inline BitStream* bitstream_fopen(char* path,int open_mode);
+static inline BitStream* bitstream_mopen(char* base_adress,size_t size,int open_mode);
+static inline void bitstream_close(BitStream* bs);
+static inline void bitstream_write(BitStream* bs,char bit);
 static inline char bitstream_read(BitStream* bs);
 
 
@@ -33,10 +34,16 @@ struct bitstream {
 typedef struct bitstream_file {
     BitStream bstream;
     FILE* fd;
-    int file_buffer_size;
+    size_t file_buffer_size;
     char file_buffer[FILE_BUFFER_SIZE];
     
 } BitStreamFile;
+
+typedef struct bitstream_memory {
+    BitStream bstream;
+    size_t memory_size;
+    char* base_adress;
+} BitStreamMemory;
 
 enum {
     BS_FILE,
@@ -75,6 +82,31 @@ static inline BitStream* bitstream_fopen(char* path, int open_mode){
   
 }
 
+static inline BitStream* bitstream_mopen(char* base_adress,size_t size,int open_mode){
+    
+    BitStreamMemory* bsm = (BitStreamMemory*)checked_malloc(sizeof(BitStreamMemory));
+    bsm->bstream.stream_type = BS_MEMORY;
+    bsm->bstream.open_mode = open_mode;
+    bsm->base_adress = base_adress;
+    bsm->memory_size = size;
+    
+    if ( open_mode == BS_READ){
+        bsm->bstream.buffer_remaining_bits = 0;
+        bsm->bstream.buffer = base_adress - 1;
+    }
+    else if ( open_mode == BS_WRITE){
+        bsm->bstream.buffer_remaining_bits = 8;
+        bsm->bstream.buffer = base_adress;
+        *base_adress = 0;
+    }
+    else {
+        fprintf(stderr,"bit_stream_mopen : Wrong open_mode, should be BS_READ or BS_WRITE\n");
+        return NULL;
+    }
+    
+    return (BitStream*)bsm; 
+  
+}
 static inline void bitstream_close(BitStream* bs){
     
     int bits_to_fill_count = ( 8 - bs->buffer_remaining_bits );
@@ -94,14 +126,11 @@ static inline void bitstream_close(BitStream* bs){
     free(bs);
 }
 
-
-
-
 static inline void bitstream_write(BitStream* bs,char bit){
             
     assert( bs->open_mode == BS_WRITE && bit >= 0 && bit <= 1);
     
-    (*bs->buffer) = ( *(bs->buffer) | ( bit << bs->buffer_remaining_bits - 1 ) );
+    *(bs->buffer) = ( *(bs->buffer) | ( bit << bs->buffer_remaining_bits - 1 ) );
     bs->buffer_remaining_bits--;
     
     if ( bs->buffer_remaining_bits == 0 ){
@@ -113,6 +142,13 @@ static inline void bitstream_write(BitStream* bs,char bit){
                 fwrite(((BitStreamFile*)bs)->file_buffer,sizeof(char),FILE_BUFFER_SIZE,((BitStreamFile*)bs)->fd);
                 memset(((BitStreamFile*)bs)->file_buffer,0,FILE_BUFFER_SIZE * sizeof(char));
             }
+        }
+        else {
+            if ( bs->buffer > ((BitStreamMemory*)bs)->base_adress + ((BitStreamMemory*)bs)->memory_size){
+                fprintf(stderr,"bitstream_write : Writing beyond memory range, terminating...\n");
+                exit(EXIT_FAILURE);
+            }
+            *(bs->buffer) = 0;
         }
     }
 } 
@@ -137,6 +173,8 @@ static inline char bitstream_read(BitStream* bs){
         }
         else {
             bs->buffer++;
+            if ( bs->buffer >= ((BitStreamMemory*)bs)->base_adress + ((BitStreamMemory*)bs)->memory_size )
+                return -1;
         }
         bs->buffer_remaining_bits = 8;
     }

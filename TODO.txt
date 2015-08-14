@@ -1,14 +1,13 @@
 
 /* TODO */
 
-- Create BitStream type ( Should be able to output to memory, as well as to files )
-    Performance is important.
-    Read file by block buffer.
-    Ilining is surely needed, move to header file
-- Compress the file effectively and compare estimated compression ratio to real compression ratio ( SHould be the quite the same as the prediction on block is quite easy... )
+  * Implement distance,length compression
+  * Change relevant function from char* to unsigned short int* ( Alphabet of more thant 256 symbols )
+  * Brute force test ratio the whole compression
   * Header should be defined this way
     One Byte : Number of symbols
     Then for each symbol  
+    Symbol value : 8 bit
     Code length size special bit: 1 bit 
     Code length : 4 bit if previous is zero, 8 bit if previous is 1	
     Actual code : 1 bit for each bit of the code
