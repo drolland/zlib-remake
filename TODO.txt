@@ -2,6 +2,17 @@
 /* TODO */
 
   * Implement distance,length compression
+
+    TEST and improvement : 
+        Test compression and decompression. MD5SUM
+        Test hash function collision for every 3character starting sequence. improve speed ??
+        Auto remove old entry in HASH_TABLE
+        DO NOT compress Length 3 match for distance >= 513 ??? ( Inefficient, can in fact be more large cause of extra bits, but length 3 is a very common symbol, do test with a threshold )
+        Custom Alloc, inlining
+        Does cach prefect memory backward ?
+
+
+
   * Change relevant function from char* to unsigned short int* ( Alphabet of more thant 256 symbols )
   * Brute force test ratio the whole compression
   * Header should be defined this way
@@ -21,9 +32,15 @@ FUTURE :
     * Compression Max Performance : what can be achieved by Brute Force ( Trying every symbol count for each block ) ?. Conclude. Is it time to implement the second part of compression ?
    
     * Adptative compression. INFO in FIREFOX BOOKMARK. REREAD DEFLATE.
+
+    * Doxygen documentation
+
+    * Same API as zlib ( Drop down replacement )
      
 
+POSSIBLE PERFORMANCE BOTTLENECK
 
+    * Hash function
      
     
      	

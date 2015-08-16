@@ -4,7 +4,7 @@
 #include "dmemory.h"
 
 
-int file_read_into_buffer(char** buffer, char* file_path){
+int dfile_read_into_buffer(char** buffer, char* file_path){
     
     FILE* fd = fopen(file_path,"rb");
     if ( fd == NULL)

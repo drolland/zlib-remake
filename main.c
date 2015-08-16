@@ -12,6 +12,7 @@
 #include "dfile.h"
 #include "dmemory.h"
 #include "bitstream.h"
+#include "test.h"
 #include <assert.h>
 #include <math.h>
 /*
@@ -19,13 +20,13 @@
  */
 int main(int argc, char** argv) {
 
-    DBinaryTree* huff_tree = NULL;
+    /*DBinaryTree* huff_tree = NULL;
     HuffTreeStats* stats = NULL;
     
     char* file_path = "binary.o";
     
     char *buffer = NULL;  
-    int buffer_size = file_read_into_buffer(&buffer,file_path);
+    int buffer_size = dfile_read_into_buffer(&buffer,file_path);
     if ( buffer_size == -1){
         printf("Couldn't open file %s : ",file_path);
         exit(EXIT_FAILURE);
@@ -45,12 +46,12 @@ int main(int argc, char** argv) {
         stats = huff_compute_tree_stats(huff_tree);
         huff_print_tree_stats(stats);
         
-        fprintf(fd,"%d %f\n",i,stats->total_compression_ratio_estimation);
+        //fprintf(fd,"%d %f\n",i,stats->total_compression_ratio_estimation);
         
         free(stats);
         mpool_release();
     }
-    
+    */
 
     
     
@@ -110,55 +111,10 @@ int main(int argc, char** argv) {
     free(buffer);*/
     
     
-    char* memory = (char*)malloc(3*sizeof(char));
-    BitStream* file = bitstream_mopen(memory,3,BS_WRITE);
-    printf("memory[0] : 0 %d\n",(unsigned char)memory[0]);
-    bitstream_write(file,1);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
     
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    bitstream_write(file,1);
-    printf("memory[0] : 1 %d\n",(unsigned char)memory[0]);
     
-    bitstream_write(file,0);
-    bitstream_write(file,1);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    
-    bitstream_write(file,1);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    bitstream_write(file,1);
-
-    bitstream_write(file,0);
-    bitstream_write(file,1);
-    bitstream_write(file,0);
-    bitstream_write(file,0);
-    
-    bitstream_write(file,1);
-    
-    bitstream_close(file);
-    
-    char c;
-    file = bitstream_mopen(memory,3,BS_READ);
-    while ( ( c = bitstream_read(file) ) != -1){
-        printf("%d ",c);
-    }
-    
-    /*
-    BitStream* file = bitstream_fopen("test.bmp",BS_READ);
-    BitStream* file_out = bitstream_fopen("test_out.bmp",BS_WRITE);
-    char character;
-    while ( ( character = bitstream_read(file) ) != -1){
-        bitstream_write(file_out,character);
-    }
-    
-    bitstream_close(file_out); */   
-
+    //test_lz77_encode("lz77encode_test.txt");
+    test_lz77_encode("test3.bmp");
     
     
     exit(EXIT_SUCCESS);

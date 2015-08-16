@@ -39,10 +39,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/dbinarytree.o \
 	${OBJECTDIR}/derror.o \
 	${OBJECTDIR}/dfile.o \
-	${OBJECTDIR}/dlist.o \
 	${OBJECTDIR}/dmemory.o \
 	${OBJECTDIR}/huffman.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/lz77.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/test.o
 
 
 # C Compiler Flags
@@ -72,42 +73,47 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/huffman: ${OBJECTFILES}
 ${OBJECTDIR}/crc.o: crc.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/crc.o crc.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/crc.o crc.c
 
 ${OBJECTDIR}/dbinarytree.o: dbinarytree.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbinarytree.o dbinarytree.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbinarytree.o dbinarytree.c
 
 ${OBJECTDIR}/derror.o: derror.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/derror.o derror.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/derror.o derror.c
 
 ${OBJECTDIR}/dfile.o: dfile.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dfile.o dfile.c
-
-${OBJECTDIR}/dlist.o: dlist.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dlist.o dlist.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dfile.o dfile.c
 
 ${OBJECTDIR}/dmemory.o: dmemory.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dmemory.o dmemory.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dmemory.o dmemory.c
 
 ${OBJECTDIR}/huffman.o: huffman.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/huffman.o huffman.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/huffman.o huffman.c
+
+${OBJECTDIR}/lz77.o: lz77.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lz77.o lz77.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O3 -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/test.o: test.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -DNDEBUG -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/test.o test.c
 
 # Subprojects
 .build-subprojects:

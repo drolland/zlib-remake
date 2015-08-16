@@ -12,6 +12,8 @@
       <itemPath>dlist.h</itemPath>
       <itemPath>dmemory.h</itemPath>
       <itemPath>huffman.h</itemPath>
+      <itemPath>lz77.h</itemPath>
+      <itemPath>test.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -27,7 +29,9 @@
       <itemPath>dlist.c</itemPath>
       <itemPath>dmemory.c</itemPath>
       <itemPath>huffman.c</itemPath>
+      <itemPath>lz77.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>test.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -76,8 +80,6 @@
       </item>
       <item path="dfile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="dlist.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="dlist.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dmemory.c" ex="false" tool="0" flavor2="0">
@@ -88,7 +90,15 @@
       </item>
       <item path="huffman.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="lz77.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="lz77.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -99,7 +109,7 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <developmentMode>6</developmentMode>
+          <developmentMode>0</developmentMode>
           <architecture>2</architecture>
           <standard>10</standard>
           <preprocessorList>
@@ -137,8 +147,6 @@
       </item>
       <item path="dfile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="dlist.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="dlist.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dmemory.c" ex="false" tool="0" flavor2="0">
@@ -149,7 +157,15 @@
       </item>
       <item path="huffman.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="lz77.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="lz77.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

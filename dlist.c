@@ -3,9 +3,6 @@
 #include "dmemory.h"
 #include "dlist.h"
 
-/* Append data at the end of the list.
- * Return the new start of the list ( Be sure to use it ! )
- */
 DList* dlist_append(DList* list,void* to_insert){
 
     assert(to_insert != NULL);
@@ -26,8 +23,27 @@ DList* dlist_append(DList* list,void* to_insert){
     return list;
 }
 
-/* Free a list but not is content
- */
+DList* dlist_prepend(DList* list,void* to_insert){
+    
+    assert(to_insert != NULL);
+        
+    DList* new_element = (DList*)checked_malloc(sizeof(DList));
+    new_element->content = to_insert;
+    
+    
+    if ( list == NULL){
+        new_element->next = NULL;
+        return new_element;
+    }
+    
+    
+    new_element->next = list;
+    
+    return new_element;
+    
+}
+
+
 void dlist_free(DList* list){
     
     if ( list == NULL)

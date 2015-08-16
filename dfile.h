@@ -6,5 +6,5 @@
  *  char* file_path : path to the file
  *  Returns the amount of char read or -1 is an error occured
  */
-int file_read_into_buffer(char** buffer,char* file_path);
+int dfile_read_into_buffer(char** buffer,char* file_path);
 
