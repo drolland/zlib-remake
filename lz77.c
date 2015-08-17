@@ -7,8 +7,8 @@
 #include "crc.h"
 #include "dmemory.h"
 
-#define HASH_TABLE_SIZE 16384
-#define HASH_CHAIN_SIZE 3
+#define HASH_TABLE_SIZE 16381
+#define HASH_CHAIN_SIZE 1024
 
 enum {
     LENGTH_CODE = 297,
@@ -29,43 +29,62 @@ typedef struct lz77_match {
     size_t length;
 } LZ77_Match;
 
+unsigned int lz77_hash_func(unsigned char* pos){
+    
+
+/*
+    unsigned int hash = pos[0] | pos[1] << 8 | pos[2] << 16;
+    hash  += hash >> 11;
+    
+    hash += pos[0] | pos[1] << 8 | pos[2] << 16;
+    hash ^= hash << 16;
+    hash += hash >> 11;
+        
+
+    // Force "avalanching" of final 127 bits 
+    hash ^= hash << 3;
+    hash += hash >> 5;
+    hash ^= hash << 4;
+    hash += hash >> 17;
+    hash ^= hash << 25;
+    hash += hash >> 6;
+*/
+
+    return ( pos[0] | pos[1] << 8 | pos[2] << 16 ) % HASH_TABLE_SIZE;
+}
+
 void lz77_hash_table_insert(HashChain** hash_table, int hash_index, unsigned char* pos) {
 
-    
     HashChain* chain = hash_table[hash_index];
 
     if (chain == NULL) {
+        
         chain = checked_malloc(sizeof (HashChain));
         hash_table[hash_index] = chain;
-        chain->search_end = chain->entries;
-        chain->next_insert = chain->entries + 1;
-        *(chain->entries) = pos;
-        
-        
+        chain->search_end =  &(chain->entries[HASH_CHAIN_SIZE-1]);
+        chain->next_insert =  &(chain->entries[HASH_CHAIN_SIZE-2]);
+        *(chain->next_insert + 1) = pos;
+
     } else {
+
         *(chain->next_insert) = pos;
 
-        if (chain->next_insert == chain->search_end) {
-            chain->next_insert++;
-            chain->search_end++;
+        assert(chain->next_insert <= &(chain->entries[HASH_CHAIN_SIZE-1]) && chain->next_insert >= chain->entries);
+        assert(chain->search_end  <= &(chain->entries[HASH_CHAIN_SIZE-1]) && chain->search_end >= chain->entries);
+
+        if (chain->next_insert == chain->entries) {
+            if (chain->next_insert == chain->search_end) 
+                chain->search_end = &(chain->entries[HASH_CHAIN_SIZE-1]);
+            chain->next_insert = &(chain->entries[HASH_CHAIN_SIZE-1]);
         } else {
-            chain->next_insert++;
+            if (chain->next_insert == chain->search_end) 
+                chain->search_end--;
+            chain->next_insert--;
+            }
         }
-
-                    
-       
-        assert(chain->next_insert <= &(chain->entries[HASH_CHAIN_SIZE + 1]) );
-        if (chain->next_insert == &(chain->entries[HASH_CHAIN_SIZE + 1])) {
-            if (chain->next_insert == chain->search_end) {
-                chain->next_insert = chain->entries;
-                chain->search_end = chain->entries;
-            } else
-                chain->next_insert = chain->entries;
-        }
-
     }
 
-}
+
 
 void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos, size_t maxlen) {
 
@@ -81,11 +100,12 @@ void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos
 
         do {
 
-            assert(current_search >= current_hash_chain->entries && current_search <= &(current_hash_chain->entries[HASH_CHAIN_SIZE]));
-            if (current_search == current_hash_chain->entries)
-                current_search = &(current_hash_chain->entries[HASH_CHAIN_SIZE]);
+            assert(current_search >= current_hash_chain->entries && current_search <= &(current_hash_chain->entries[HASH_CHAIN_SIZE - 1]));
+            
+            if (current_search == &(current_hash_chain->entries[HASH_CHAIN_SIZE-1]))
+                current_search = current_hash_chain->entries;
             else
-                current_search--;
+                current_search++;
 
             // Remove old entries
 
@@ -107,8 +127,6 @@ void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos
                 match_length++;
             }
 
-
-
             if (match_length > matches_max_length) {
                 matches_max_length = match_length;
                 match_chain_index = hash_chain_index;
@@ -125,12 +143,12 @@ void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos
 
         match->length = matches_max_length;
 
-        current_search = current_hash_chain->next_insert - 1;
-        if (current_search - hash_chain_index >= current_hash_chain->entries)
-            match->position = *(current_search - hash_chain_index);
+        current_search = current_hash_chain->next_insert + 1;
+        if (current_search + hash_chain_index <= &(current_hash_chain->entries[HASH_CHAIN_SIZE-1]))
+            match->position = *(current_search + hash_chain_index);
         else {
-            assert(current_search - hash_chain_index + HASH_CHAIN_SIZE >= current_hash_chain->entries);
-            match->position = *(current_search - hash_chain_index + HASH_CHAIN_SIZE);
+            assert(current_search + hash_chain_index - HASH_CHAIN_SIZE >= current_hash_chain->entries);
+            match->position = *(current_search + hash_chain_index - HASH_CHAIN_SIZE);
         }
 
     }
@@ -155,7 +173,7 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
         if (match.length == 0) {
             lz77_hash_table_insert(hash_table, hash_index, pos);
             *(pos_out++) = *(pos++);
-            hash_index = my_hash(pos, 3) % HASH_TABLE_SIZE;
+            hash_index = lz77_hash_func(pos);
 
         } else {
 
@@ -167,7 +185,7 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
             for (int i = 0; i < match.length; i++) {
                 lz77_hash_table_insert(hash_table, hash_index, pos);
                 pos++;
-                hash_index = my_hash(pos, 3) % HASH_TABLE_SIZE;
+                hash_index = lz77_hash_func(pos);
             }
         }
 

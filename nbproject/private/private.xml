@@ -9,6 +9,7 @@
         <group>
             <file>file:/home/drolland/NetBeansProjects/Huffman/dmemory.h</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/main.c</file>
+            <file>file:/home/drolland/NetBeansProjects/Huffman/test.c</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/dfile.c</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/bitstream.c</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/derror.h</file>
@@ -22,6 +23,7 @@
             <file>file:/home/drolland/NetBeansProjects/Huffman/TODO.txt</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/bitstream.h</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/huffman.c</file>
+            <file>file:/home/drolland/NetBeansProjects/Huffman/lz77.c</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/crc.c</file>
             <file>file:/home/drolland/NetBeansProjects/Huffman/dfile.h</file>
         </group>
