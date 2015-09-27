@@ -64,11 +64,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/huffman
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/huffman: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/huffman ${OBJECTFILES} ${LDLIBSOPTIONS} -lcairo -lm
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake ${OBJECTFILES} ${LDLIBSOPTIONS} -lcairo -lm
 
 ${OBJECTDIR}/crc.o: crc.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -121,7 +121,7 @@ ${OBJECTDIR}/test.o: test.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/huffman
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake
 
 # Subprojects
 .clean-subprojects:

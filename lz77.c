@@ -7,8 +7,8 @@
 #include "crc.h"
 #include "dmemory.h"
 
-#define HASH_TABLE_SIZE 16381
-#define HASH_CHAIN_SIZE 1024
+#define HASH_TABLE_SIZE 16381 // Prime number
+#define HASH_CHAIN_SIZE 16
 
 enum {
     LENGTH_CODE = 297,
@@ -29,10 +29,11 @@ typedef struct lz77_match {
     size_t length;
 } LZ77_Match;
 
-unsigned int lz77_hash_func(unsigned char* pos){
-    
 
-/*
+
+
+static inline unsigned int lz77_hash_func(unsigned char* pos){
+    /*
     unsigned int hash = pos[0] | pos[1] << 8 | pos[2] << 16;
     hash  += hash >> 11;
     
@@ -48,18 +49,21 @@ unsigned int lz77_hash_func(unsigned char* pos){
     hash += hash >> 17;
     hash ^= hash << 25;
     hash += hash >> 6;
-*/
 
-    return ( pos[0] | pos[1] << 8 | pos[2] << 16 ) % HASH_TABLE_SIZE;
+    return hash % HASH_TABLE_SIZE;*/
+    return  ( pos[0] << 16| pos[1] << 8 | pos[2] ) % HASH_TABLE_SIZE;
 }
 
-void lz77_hash_table_insert(HashChain** hash_table, int hash_index, unsigned char* pos) {
+
+static int hash_chain_count = 0;
+static inline void lz77_hash_table_insert(HashChain** hash_table, int hash_index, unsigned char* pos) {
 
     HashChain* chain = hash_table[hash_index];
 
     if (chain == NULL) {
         
-        chain = checked_malloc(sizeof (HashChain));
+        chain = mpool_alloc(sizeof (HashChain));
+        hash_chain_count++;
         hash_table[hash_index] = chain;
         chain->search_end =  &(chain->entries[HASH_CHAIN_SIZE-1]);
         chain->next_insert =  &(chain->entries[HASH_CHAIN_SIZE-2]);
@@ -86,7 +90,7 @@ void lz77_hash_table_insert(HashChain** hash_table, int hash_index, unsigned cha
 
 
 
-void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos, size_t maxlen) {
+static inline void lz77_search_for_match(LZ77_Match* match, int hash_index, unsigned char* pos, size_t maxlen) {
 
     if (hash_table[hash_index] == NULL) {
 
@@ -164,7 +168,7 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
     int hash_index;
 
     memset(hash_table, 0, HASH_TABLE_SIZE * sizeof (char));
-    hash_index = my_hash(pos, 3) % HASH_TABLE_SIZE;
+    hash_index = lz77_hash_func(pos);
 
     while (pos < pos_end - 3) {
 
@@ -195,6 +199,8 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
         *(pos_out++) = *(pos++);
 
     *pos_out = END_OF_BLOCK;
+    
+    printf("hash_chain_count %d \n",hash_chain_count);
 }
 
 void lz77_dbg_print_buffer(unsigned short int* buffer, size_t buffer_size) {
@@ -207,35 +213,13 @@ void lz77_dbg_print_buffer(unsigned short int* buffer, size_t buffer_size) {
             break;
         }
 
+        /*
         if (*(buffer + i) < 300) printf("%c", *((char*) (buffer + i)));
         else if (*(buffer + i) < 1000) printf("<%d,", *(buffer + i) - 297);
         else printf("%d>", *(buffer + i) - 999);
+         */
 
 
     }
 }
 
-/*
- 
- Algo
- 
-   - read 3 string
-   - compute hash
-   - search in hash table
-   - if no match procede to next character and step 1
-   - if matches, select the longest match
-   - im matches output and advance 
-                
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- */

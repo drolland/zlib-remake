@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=huffman
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/huffman
+CND_ARTIFACT_NAME_Debug=zlib-remake
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/zlib-remake
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=huffman.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/huffman.tar
+CND_PACKAGE_NAME_Debug=zlib-remake.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/zlib-remake.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=huffman
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/huffman
+CND_ARTIFACT_NAME_Release=zlib-remake
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/zlib-remake
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=huffman.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/huffman.tar
+CND_PACKAGE_NAME_Release=zlib-remake.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/zlib-remake.tar
 #
 # include compiler specific variables
 #

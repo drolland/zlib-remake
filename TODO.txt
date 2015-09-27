@@ -1,6 +1,8 @@
 
 /* TODO */
 
+  * Work on decomression to understand deflate tricky part
+
   * Implement distance,length compression
 
     TEST and improvement : 
@@ -9,7 +11,7 @@
         Auto remove old entry in HASH_TABLE
         DO NOT compress Length 3 match for distance >= 513 ??? ( Inefficient, can in fact be more large cause of extra bits, but length 3 is a very common symbol, do test with a threshold )
         Custom Alloc, inlining
-        Does cach prefect memory backward ?
+        Does cach prefect memory backward ? ( apparently yes, but code has been changee to go foward )
 
 
 

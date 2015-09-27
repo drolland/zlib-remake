@@ -65,7 +65,7 @@ void test_lz77_encode(char* filepath){
     unsigned short int* out_buffer = checked_malloc(sizeof(unsigned short int) * buffer_size);
     
     lz77_encode(out_buffer,buffer,buffer_size);
-    //lz77_dbg_print_buffer(out_buffer,buffer_size);
+    lz77_dbg_print_buffer(out_buffer,buffer_size);
     
     free(buffer);
     free(out_buffer);

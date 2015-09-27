@@ -15,7 +15,7 @@ static void* memory_pool= 0;
 static void* memory_pool_next_available_memory = 0;
 static int memory_pool_remaining_memory = 0;
 
-#define POOL_SIZE 1024000
+#define POOL_SIZE 8192000
 
 void* mpool_alloc(size_t size){
     if ( memory_pool == 0){

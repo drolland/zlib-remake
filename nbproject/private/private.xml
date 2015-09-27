@@ -7,25 +7,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dmemory.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/main.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/test.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dfile.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/bitstream.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/derror.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dbinarytree.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dlist.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dmemory.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/derror.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/huffman.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dbinarytree.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dlist.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/TODO.txt</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/bitstream.h</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/huffman.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/lz77.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/crc.c</file>
-            <file>file:/home/drolland/NetBeansProjects/Huffman/dfile.h</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/dmemory.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/crc.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/huffman.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/lz77.h</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/dlist.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/crc.h</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/dmemory.h</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/lz77.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/TODO.txt</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/test.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/dbinarytree.h</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/main.c</file>
+            <file>file:/home/drolland/NetBeansProjects/zlib-remake/dbinarytree.c</file>
         </group>
     </open-files>
 </project-private>

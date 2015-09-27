@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Huffman
+PROJECTNAME=zlib-remake
 
 # Active Configuration
 DEFAULTCONF=Debug
