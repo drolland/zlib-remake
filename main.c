@@ -114,9 +114,11 @@ int main(int argc, char** argv) {
     
     
     //test_lz77_encode("lz77encode_test.txt");
-    test_lz77_encode("test3.bmp");
+    //test_lz77_encode("test3.bmp");
     
-    
+    test_decompress("test.z");
+    //test_bitstream_memory();
+
     exit(EXIT_SUCCESS);
 }
 

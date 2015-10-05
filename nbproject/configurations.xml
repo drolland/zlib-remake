@@ -59,7 +59,7 @@
           <standard>10</standard>
         </cTool>
         <linkerTool>
-          <commandLine>-lcairo -lm</commandLine>
+          <commandLine>-lcairo -lm -lz</commandLine>
         </linkerTool>
       </compileType>
       <item path="bitstream.h" ex="false" tool="3" flavor2="0">

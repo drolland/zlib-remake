@@ -55,7 +55,7 @@ static inline unsigned int lz77_hash_func(unsigned char* pos){
 }
 
 
-static int hash_chain_count = 0;
+
 static inline void lz77_hash_table_insert(HashChain** hash_table, int hash_index, unsigned char* pos) {
 
     HashChain* chain = hash_table[hash_index];
@@ -63,7 +63,7 @@ static inline void lz77_hash_table_insert(HashChain** hash_table, int hash_index
     if (chain == NULL) {
         
         chain = mpool_alloc(sizeof (HashChain));
-        hash_chain_count++;
+      
         hash_table[hash_index] = chain;
         chain->search_end =  &(chain->entries[HASH_CHAIN_SIZE-1]);
         chain->next_insert =  &(chain->entries[HASH_CHAIN_SIZE-2]);
@@ -167,7 +167,7 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
     LZ77_Match match;
     int hash_index;
 
-    memset(hash_table, 0, HASH_TABLE_SIZE * sizeof (char));
+    memset(hash_table, 0, HASH_TABLE_SIZE * sizeof (HashChain*));
     hash_index = lz77_hash_func(pos);
 
     while (pos < pos_end - 3) {
@@ -200,7 +200,61 @@ void lz77_encode(unsigned short int* dst, unsigned char* src, size_t buffer_size
 
     *pos_out = END_OF_BLOCK;
     
-    printf("hash_chain_count %d \n",hash_chain_count);
+    
+}
+
+void lz77_encode_file(unsigned short int* dst, FILE* file, size_t file_size) {
+
+    unsigned char* buffer = malloc(file_size * sizeof(char));
+    unsigned char* pos = buffer;
+    unsigned char* pos_end = pos + file_size;
+    unsigned short int* pos_out = dst;
+    LZ77_Match match;
+    int hash_index;
+
+    memset(hash_table, 0, HASH_TABLE_SIZE * sizeof (HashChain*));
+    
+    *(pos) = fgetc(file);
+    *(pos+1) = fgetc(file);
+    *(pos+2) = fgetc(file);
+    *(pos+3) = fgetc(file);
+    hash_index = lz77_hash_func(pos);
+    
+    while (pos < pos_end - 3) {
+        
+        lz77_search_for_match(&match, hash_index, pos, pos_end - pos);
+
+        if (match.length == 0) {
+            lz77_hash_table_insert(hash_table, hash_index, pos);
+            *(pos_out++) = *(pos++);
+            *(pos+3) = fgetc(file);
+            hash_index = lz77_hash_func(pos);
+            
+
+        } else {
+
+            *pos_out = LENGTH_CODE + match.length;
+            pos_out++;
+            *pos_out = (long int) DISTANCE_CODE + (long int) (pos - (match.position));
+            pos_out++;
+
+            for (int i = 0; i < match.length; i++) {
+                lz77_hash_table_insert(hash_table, hash_index, pos);
+                pos++;
+                *(pos+3) = fgetc(file);
+                hash_index = lz77_hash_func(pos);
+                
+            }
+        }
+
+    }
+
+    while (pos < pos_end)
+        *(pos_out++) = *(pos++);
+
+    *pos_out = END_OF_BLOCK;
+    
+    
 }
 
 void lz77_dbg_print_buffer(unsigned short int* buffer, size_t buffer_size) {

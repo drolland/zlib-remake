@@ -128,7 +128,7 @@ static inline void bitstream_close(BitStream* bs){
 
 static inline void bitstream_write(BitStream* bs,char bit){
             
-    assert( bs->open_mode == BS_WRITE && bit >= 0 && bit <= 1);
+//    assert( bs->open_mode == BS_WRITE && ( bit == 0 || bit == 1) );
     
     *(bs->buffer) = ( *(bs->buffer) | ( bit << bs->buffer_remaining_bits - 1 ) );
     bs->buffer_remaining_bits--;

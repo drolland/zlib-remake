@@ -68,7 +68,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake ${OBJECTFILES} ${LDLIBSOPTIONS} -lcairo -lm
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zlib-remake ${OBJECTFILES} ${LDLIBSOPTIONS} -lcairo -lm -lz
 
 ${OBJECTDIR}/crc.o: crc.c 
 	${MKDIR} -p ${OBJECTDIR}
